@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import federation from "@originjs/vite-plugin-federation"
 
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     federation({
       name: "teddy-table-microfrontend",
       filename: "remoteEntry.js",

@@ -1,16 +1,40 @@
-import { useState } from "react";
+import React from "react";
+import type { DataTableProps } from "../types/table.types";
+import NoResults from "./NoResults";
 
-const Table = () => {
-  const [count, setCount] = useState(0);
 
-  return (
-    <div className="App">
-      <h1>Remote Application</h1>
-      <button className="shared-btn" onClick={() => setCount((s) => s + 1)}>
-        Click me: {count}
-      </button>
-    </div>
-  )
+export function Table <T>({ columns, rows, actionElements }: DataTableProps<T>) { 
+  return <>
+    { rows.length ?
+      <TableContent columns={columns} rows={rows} actionElements={actionElements}/>
+      :
+      <NoResults/> 
+    }
+  </>
 }
 
-export default Table
+function TableContent <T>({ columns, rows, actionElements }: DataTableProps<T>) {
+  return (
+    <ul>
+      { rows.map((row) => (
+        <li key={ row.id }>
+          { columns.map((column) => (
+            <p key={ column.title }>
+              { column.title } | { String(row[column.key]) }
+            </p>
+          ))}
+
+          { actionElements && (
+            <div className="flex items-center justify-center">
+              { actionElements.map(({ element, action }, index) => (
+                <React.Fragment key={ index }>
+                  { element(() => action(row)) }
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  )
+}
