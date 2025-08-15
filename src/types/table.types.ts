@@ -11,6 +11,8 @@ export type Row<T> = T & {
 export type DataTableProps<T> = {
   columns: Column<T>[];
   rows: Row<T>[];
+  itemsPerPage: number;
+  actualPage?: number;
   actionElements?: ActionElement<T>[]
 }
 

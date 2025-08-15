@@ -3,20 +3,23 @@ import type { DataTableProps } from "../types/table.types";
 import NoResults from "./NoResults";
 
 
-export function Table <T>({ columns, rows, actionElements }: DataTableProps<T>) { 
+export function Table <T>(props: DataTableProps<T>) { 
   return <>
-    { rows.length ?
-      <TableContent columns={columns} rows={rows} actionElements={actionElements}/>
+    { props.rows.length ?
+      <TableContent {...props}/>
       :
       <NoResults/> 
     }
   </>
 }
 
-function TableContent <T>({ columns, rows, actionElements }: DataTableProps<T>) {
+function TableContent <T>({ columns, rows, actionElements, itemsPerPage, actualPage = 1 }: DataTableProps<T>) {
+  const range = itemsPerPage * actualPage
+  const rowsInRange = rows.slice(range - itemsPerPage, range)
+  
   return (
     <ul>
-      { rows.map((row) => (
+      { rowsInRange.map((row) => (
         <li key={ row.id }>
           { columns.map((column) => (
             <p key={ column.title }>
@@ -25,7 +28,7 @@ function TableContent <T>({ columns, rows, actionElements }: DataTableProps<T>) 
           ))}
 
           { actionElements && (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center gap-3">
               { actionElements.map(({ element, action }, index) => (
                 <React.Fragment key={ index }>
                   { element(() => action(row)) }
